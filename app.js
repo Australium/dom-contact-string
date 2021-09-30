@@ -1,19 +1,3 @@
-// let buttonEl = document.querySelector('#btn');
-
-// let inputEl = document.querySelector('#inp');
-
-// let containerEl = document.querySelector('#box');
-
-// buttonEl.addEventListener('click', onLick);
-
-// function onLick() {
-//     console.log('clicked');
-//     let pushedText = inputEl.value;
-//     containerEl.insertAdjacentHTML('beforeend', `<p>${pushedText}</p>`);
-//     inputEl.value = inputEl.value.remove;
-//     inputEl.value = '';
-// }
-
 let styles = `
     font-size:18px;
     line-height: 25px;
@@ -42,9 +26,9 @@ function addAttributesForInput(element,message='',type,id,classs,value='',patter
 }
 
 let inputNameEl = document.createElement('input');
-addAttributesForInput(inputNameEl,'name','text','inpName','inp',undefined,'[A-Za-z]{1,32}');
+addAttributesForInput(inputNameEl,'name','text','inpName','inp',undefined,'[A-Za-z\u0400-\u04ff]{1,32}');
 let inputLastNameEl = document.createElement('input');
-addAttributesForInput(inputLastNameEl,'last name','text','inpLastName','inp',undefined,'[A-Za-z]{1,32}');
+addAttributesForInput(inputLastNameEl,'last name','text','inpLastName','inp',undefined,'[A-Za-z\u0400-\u04ff]{1,32}');
 let inputPhoneEl = document.createElement('input');
 addAttributesForInput(inputPhoneEl,undefined,'tel','inpPhone','inp',undefined,'[0-9]{2} [0-9]{3} [0-9]{2} [0-9]{3} [0-9]{2}');
 inputPhoneEl.placeholder = 'type your phone in format: 38 0XX XX XXX XX';
@@ -66,16 +50,16 @@ tableEl.append(tableHeadEl);
 let tableHeadRowEl = document.createElement('tr');
 tableHeadEl.append(tableHeadRowEl);
 
-function createCells(i,tag,where) {
-    for(let x = 1; x <= i; x++) {
+function createCells(n,tag,where,modificator='') {
+    for(let i = 1; i <= n; i++) {
         let tableCell = document.createElement(tag);
-        tableCell.setAttribute('id',`${tag}${x}`)
+        tableCell.setAttribute('id',`${tag}${modificator}${i}`)
         tableCell.style.border = '1px solid black';
         tableCell.style.padding = '10px';
         where.append(tableCell);
     }
 }
-createCells(3,'th',tableHeadRowEl);
+createCells(3,'th',tableHeadRowEl,undefined);
 
 th1.innerHTML = 'Name';
 th2.innerHTML = 'Last name';
@@ -89,7 +73,7 @@ tableEl.append(tableBodyEl);
 let tableBodyRowEl = document.createElement('tr')
 tableBodyEl.append(tableBodyRowEl);
 
-createCells(3,'td',tableBodyRowEl);
+createCells(3,'td',tableBodyRowEl,undefined);
 
 let mainTableCellOneEl = document.querySelector('#td1');
 let mainTableCellTwoEl = document.querySelector('#td2');
@@ -102,25 +86,36 @@ const reName = new RegExp(patternName);
 const patternPhone = inputPhoneEl.getAttribute('pattern');
 const rePhone = new RegExp(patternPhone);
 
-
-
-
 function onClick() {
     console.log('clicked');
     let pushedTextfromName = inputNameEl.value;
     let pushedTextfromLastName = inputLastNameEl.value;
     let pushedTextfromPhone = inputPhoneEl.value;
-    if (pushedTextfromName.match(reName) && pushedTextfromLastName.match(reName) && pushedTextfromPhone.match(rePhone)) {
-        
+    let computedStyle = getComputedStyle(mainTableCellThreeEl);
+    if ((computedStyle.width >= '125px') && 
+     pushedTextfromName.match(reName) &&
+     pushedTextfromLastName.match(reName) && 
+     pushedTextfromPhone.match(rePhone)) {
+        let anotherTableBodyRawEl = document.createElement('tr');
+        tableBodyEl.append(anotherTableBodyRawEl);
+        let randomId = Math.floor(Math.random()*9999);
+        createCells(3,'td',anotherTableBodyRawEl,randomId);
+        let newRowBodyCellOneEl = document.querySelector(`#td${randomId}1`);
+        let newRowBodyCellTwoEl = document.querySelector(`#td${randomId}2`);
+        let newRowBodyCellThreeEl = document.querySelector(`#td${randomId}3`);
+        newRowBodyCellOneEl.append(pushedTextfromName);
+        newRowBodyCellTwoEl.append(pushedTextfromLastName);
+        newRowBodyCellThreeEl.append(pushedTextfromPhone);
+        inputNameEl.value = '';
+        inputLastNameEl.value = '';
+        inputPhoneEl.value = '';
+     } else if (pushedTextfromName.match(reName) && pushedTextfromLastName.match(reName) && pushedTextfromPhone.match(rePhone)) {
         mainTableCellOneEl.append(pushedTextfromName);
         mainTableCellTwoEl.append(pushedTextfromLastName);
         mainTableCellThreeEl.append(pushedTextfromPhone);
         inputNameEl.value = '';
         inputLastNameEl.value = '';
         inputPhoneEl.value = '';
-    }
-
-    function checkTable () {
-        
+        console.log(computedStyle.width);
     };
 }
