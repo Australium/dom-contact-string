@@ -93,12 +93,12 @@ function onClick() {
     let pushedTextfromPhone = inputPhoneEl.value;
     let computedStyle = getComputedStyle(mainTableCellThreeEl);
     if ((computedStyle.width >= '125px') && 
-     pushedTextfromName.match(reName) &&
-     pushedTextfromLastName.match(reName) && 
-     pushedTextfromPhone.match(rePhone)) {
+        pushedTextfromName.match(reName) &&
+        pushedTextfromLastName.match(reName) && 
+        pushedTextfromPhone.match(rePhone)) {
         let anotherTableBodyRawEl = document.createElement('tr');
         tableBodyEl.append(anotherTableBodyRawEl);
-        let randomId = Math.floor(Math.random()*9999);
+        let randomId = Math.floor((Math.random()*9999) + 1);
         createCells(3,'td',anotherTableBodyRawEl,randomId);
         let newRowBodyCellOneEl = document.querySelector(`#td${randomId}1`);
         let newRowBodyCellTwoEl = document.querySelector(`#td${randomId}2`);
